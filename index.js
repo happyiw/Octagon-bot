@@ -5,7 +5,7 @@ const port = 3000;
 
 const TelegramBot = require('node-telegram-bot-api');
 
-const token = 'lol_no';
+const token = '7835383514:AAG8C1XTlpe41yF104vBUb31mvH0M1GkuZs';
 
 const bot = new TelegramBot(token, {polling: true});
 
@@ -22,6 +22,16 @@ bot.on('message', (msg) => {
 
   bot.sendMessage(chatId, 'Привет, Октагон!!!');
 });
+
+
+
+
+
+
+
+
+
+
 
 app.get('/', (req, res) => {
 	res.send('<h1>Hello, Octagon! This is Express!</h1>');
