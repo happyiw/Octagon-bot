@@ -17,14 +17,29 @@ bot.onText(/\/echo (.+)/, (msg, match) => {
   bot.sendMessage(chatId, resp);
 });
 
-bot.on('message', (msg) => {
+bot.onText(/\/start/, (msg) => {
   const chatId = msg.chat.id;
 
   bot.sendMessage(chatId, 'Привет, Октагон!!!');
 });
 
+bot.onText(/\/help/, (msg) => {
+  const chatId = msg.chat.id;
 
+  bot.sendMessage(chatId, `Команды:
+/site - отправляет в чат ссылку на сайт октагона
+/creator - отправляет в чат ФИО автора бота`);
+});
 
+bot.onText(/\/site/, msg => {
+	const chatId = msg.chat.id;
+    bot.sendMessage(chatId, `сайт Октагона: https://octagon.su`);
+});
+
+bot.onText(/\/creator/, msg => {
+	const chatId = msg.chat.id;
+    bot.sendMessage(chatId, `Создатель бота: Кузьмичев Михаил`);
+});
 
 
 
