@@ -28,7 +28,10 @@ bot.onText(/\/help/, (msg) => {
 
   bot.sendMessage(chatId, `Команды:
 /site - отправляет в чат ссылку на сайт октагона
-/creator - отправляет в чат ФИО автора бота`);
+/creator - отправляет в чат ФИО автора бота
+/randomItem - выбирает случайный предмет
+/getItemByID - поиск предмета по значению id
+/deleteItem - удаление предмета`);
 });
 
 bot.onText(/\/site/, msg => {
@@ -150,6 +153,62 @@ app.post('/updateItem', (req, res) => {
 		res.send({id: numberID,name,desc});
 	});
 });
+
+
+
+
+
+
+bot.onText(/\/randomItem/, (msg) => {
+	const chatId = msg.chat.id;
+	connection.query('SELECT * FROM Items ORDER BY RAND() LIMIT 1', (err, results) => {
+		if (err || results.length === 0) {
+			bot.sendMessage(chatId, 'Ошибка при получении случайного предмета (Его нет)');
+		} else {
+			const item = results[0];
+			bot.sendMessage(chatId, `(${item.id}) - ${item.name}: ${item.desc}`);
+		}
+	  }
+	);
+});
+
+bot.onText(/\/getItemByID (\d+)/, (msg, match) => {
+	const chatId = msg.chat.id;
+	const itemId = match[1];
+	connection.query('SELECT * FROM Items WHERE id = ?',[itemId],(err, results) => {
+		if (err || results.length === 0) {
+			bot.sendMessage(chatId, 'Предмет не найден.');
+		} else {
+			const item = results[0];
+			bot.sendMessage(chatId, `(${item.id}) - ${item.name}: ${item.desc}`);
+		}
+	  }
+	);
+});
+
+bot.onText(/\/deleteItem(?:\s+(\d+))?/, (msg, match) => {
+	const chatId = msg.chat.id;
+	const itemId = match[1];
+
+	if (!itemId) {
+		return bot.sendMessage(chatId, 'Ошибка: укажите правильный ID. Пример: /deleteItem 5');
+	}
+
+	connection.query('DELETE FROM Items WHERE id = ?', [itemId], (err, result) => {
+	if (err) {
+		return bot.sendMessage(chatId, 'Ошибка при удалении.');
+	}
+	if (result.affectedRows === 0) {
+		return bot.sendMessage(chatId, 'Ошибка: такого предмета нет.');
+	}
+	bot.sendMessage(chatId, `Предмет с ID ${itemId} удалён.`);
+	});
+});
+
+
+
+
+
 
 
 
